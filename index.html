@@ -145,7 +145,7 @@
   </defs>
 </svg>
 
-<div id="yt-player" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;pointer-events:none;"></div>
+<audio id="bgm" src="asakusa-kid.mp3" preload="auto" loop></audio>
 
 <div id="cover">
   <img class="cover-gi" src="IMG_1607.JPG" alt="義">
@@ -340,9 +340,9 @@
 
   <section id="geki">
     <div class="geki-line strong">こっから気合い見せれんのかよ</div>
-<div class="geki-line">嫌ならさっさと地元帰れよ</div>
-<div class="geki-line">男の横が簡単なわけねーだろ</div>
-<div class="geki-line strong">これからもだよ</div>
+    <div class="geki-line">嫌ならさっさと地元帰れよ</div>
+    <div class="geki-line">男の横が簡単なわけねーだろ</div>
+    <div class="geki-line strong">これからもだよ</div>
   </section>
 
   <section id="honne">
@@ -357,7 +357,6 @@
     <div class="honne-line">今までと何がちげーんだよ</div>
     <div class="honne-line">男やめちまったんなら男ぶってんじゃねーよ</div>
     <div class="honne-line final">たけしはおれじゃねーっつーの</div>
-
     <div class="honne-line small">馬鹿でも卑怯でもカスでもクズでも大切にするもんあるだろーよ</div>
     <div class="honne-line small">そこだけは間違えるなよ</div>
     <div class="honne-line small">頭わりーからとか学がねーとか関係無いとこだから</div>
@@ -366,7 +365,6 @@
     <div class="honne-line small">言葉が見つからないに逃げてばっかだといろんなもん見失っちゃうぞ</div>
     <div class="honne-line small">足元見直せよ</div>
     <div class="honne-line small">大切なもんくらい見えねーのか？</div>
-
     <div class="honne-line final" style="margin-top:64px; font-size:clamp(13px,2.1vw,16px); letter-spacing:0.1em; line-height:2.0;">人生で、これ以上自分を思って正面からもの言ってきてくれる他人を見つけれると思ってんだったら見つけてみろよ</div>
   </section>
 
@@ -376,24 +374,8 @@
 
 </div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
 <script>
-  var player;
-  var playerReady = false;
-
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('yt-player', {
-      height: '1', width: '1',
-      videoId: 'dasO63QsaH8',
-      playerVars: { controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1, rel: 0 },
-      events: {
-        onReady: function(e) {
-          playerReady = true;
-          e.target.setVolume(55);
-        }
-      }
-    });
-  }
+  var bgm = document.getElementById('bgm');
 
   function startStory() {
     var cover = document.getElementById('cover');
@@ -404,13 +386,8 @@
       window.scrollTo(0, 0);
       startObserver();
     }, 600);
-    if (playerReady) {
-      player.playVideo();
-    } else {
-      var waitPlay = setInterval(function() {
-        if (playerReady) { player.playVideo(); clearInterval(waitPlay); }
-      }, 300);
-    }
+    bgm.volume = 0.55;
+    bgm.play().catch(function(){});
     setTimeout(function() { cover.style.display = 'none'; }, 1500);
   }
 
