@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>義</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background-color: #080808;
+    color: #e8e0d0;
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', 'Georgia', serif;
+    overflow-x: hidden;
+  }
+  #cover {
+    position: fixed;
+    inset: 0;
+    background: #080808;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    transition: opacity 1.2s ease;
+  }
+  #cover.fade-out { opacity: 0; pointer-events: none; }
+  .cover-gi {
+    font-family: 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+    font-weight: 900;
+    font-size: clamp(160px, 40vw, 360px);
+    line-height: 1;
+    color: #c8b060;
+    filter: url(#kasure-filter);
+    opacity: 0;
+    animation: fadeInSlow 2.2s ease forwards 0.3s;
+  }
+  .cover-sub {
+    margin-top: 36px;
+    font-size: clamp(14px, 2.8vw, 20px);
+    color: #8a7a50;
+    letter-spacing: 0.35em;
+    opacity: 0;
+    animation: fadeInSlow 2s ease forwards 1.5s;
+    font-weight: 300;
+  }
+  #start-btn {
+    margin-top: 64px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #4a4030;
+    color: #7a6a40;
+    font-size: clamp(12px, 2.2vw, 15px);
+    letter-spacing: 0.25em;
+    padding: 12px 4px;
+    cursor: pointer;
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif;
+    opacity: 0;
+    animation: fadeInSlow 1.5s ease forwards 2.8s;
+    transition: color 0.4s, border-color 0.4s;
+    line-height: 1.8;
+    text-align: center;
+  }
+  #start-btn:hover { color: #a08830; border-color: #a08830; }
+  @keyframes fadeInSlow {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .svg-filter { position: absolute; width: 0; height: 0; }
+  #story { opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
+  #story.visible { opacity: 1; pointer-events: auto; }
+  #main-body { max-width: 680px; margin: 0 auto; padding: 100px 28px 60px; }
+  .block {
+    margin-bottom: 52px;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .block.visible { opacity: 1; transform: translateY(0); }
+  .line-ore {
+    font-size: clamp(14px, 2.4vw, 17px);
+    color: #e4dcc8;
+    line-height: 1.95;
+    letter-spacing: 0.07em;
+    margin-bottom: 5px;
+    padding-left: 14px;
+    border-left: 2px solid #a08830;
+  }
+  .line-omae {
+    font-size: clamp(12px, 1.9vw, 14px);
+    color: #686058;
+    line-height: 1.95;
+    letter-spacing: 0.07em;
+    padding-left: 14px;
+    border-left: 2px solid #2a2820;
+  }
+  .divider { width: 48px; height: 1px; background: #a08830; margin: 72px auto; opacity: 0; transition: opacity 0.7s ease; }
+  .divider.visible { opacity: 0.5; }
+  .cut-line {
+    max-width: 680px; margin: 0 auto; padding: 0 28px; text-align: center;
+    opacity: 0; transform: translateY(18px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .cut-line.visible { opacity: 1; transform: translateY(0); }
+  .cut-ore  { font-size: clamp(24px, 4.5vw, 36px); color: #e4dcc8; letter-spacing: 0.25em; margin-bottom: 10px; }
+  .cut-omae { font-size: clamp(17px, 2.8vw, 23px); color: #686058; letter-spacing: 0.25em; }
+  #geki { max-width: 680px; margin: 0 auto; padding: 80px 28px 60px; }
+  .geki-line {
+    font-size: clamp(15px, 2.6vw, 19px); color: #ccc0a0; line-height: 2.3; letter-spacing: 0.1em;
+    opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .geki-line.visible { opacity: 1; transform: translateY(0); }
+  .geki-line.strong { font-size: clamp(19px, 3.4vw, 26px); color: #e4dcc8; font-weight: 700; letter-spacing: 0.14em; }
+  #honne { max-width: 580px; margin: 0 auto; padding: 60px 28px 80px; text-align: center; }
+  .honne-divider { width: 36px; height: 1px; background: #444; margin: 0 auto 56px; opacity: 0; transition: opacity 0.7s ease; }
+  .honne-divider.visible { opacity: 1; }
+  .honne-line {
+    font-size: clamp(13px, 2.1vw, 16px); color: #7a7060; line-height: 2.5; letter-spacing: 0.09em; margin-bottom: 4px;
+    opacity: 0; transform: translateY(10px); transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .honne-line.visible { opacity: 1; transform: translateY(0); }
+  .honne-line.strong  { color: #b8aa88; font-size: clamp(15px, 2.5vw, 19px); margin-top: 14px; }
+  .honne-line.final   { color: #a08830; font-size: clamp(14px, 2.3vw, 17px); letter-spacing: 0.22em; margin-top: 36px; }
+  .honne-line.small   { font-size: clamp(12px, 1.9vw, 14px); color: #5a5248; margin-top: 48px; line-height: 2.8; }
+  #closing { padding: 40px 0 120px; display: flex; justify-content: center; opacity: 0; transition: opacity 1.2s ease; }
+  #closing.visible { opacity: 1; }
+  .closing-gi {
+    font-family: 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+    font-weight: 900; font-size: clamp(80px, 18vw, 160px); color: #2a2418;
+    filter: url(#kasure-filter); line-height: 1;
+  }
+</style>
+</head>
+<body>
+
+<svg class="svg-filter" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="kasure-filter" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.06 0.08" numOctaves="4" seed="12" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+      <feComposite in="displaced" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<div id="yt-player" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;pointer-events:none;"></div>
+
+<div id="cover">
+  <div class="cover-gi">義</div>
+  <div class="cover-sub">かっこいいか、ダサいか。</div>
+  <button id="start-btn" onclick="startStory()">心を決めてから<br>これを最後まで読むこと</button>
+</div>
+
+<div id="story">
+
+  <section id="main-body">
+
+    <div class="block">
+      <div class="line-omae">ウジウジしてるのが今のお前</div>
+      <div class="line-ore">パリッと生きてるのが今の俺</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">先見てんのが今の俺</div>
+      <div class="line-omae">過去探してる今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">世界のいろんなもん感じる準備してるのが今の俺</div>
+      <div class="line-omae">日本に帰って安全地帯にいつももどりたくなっちゃってる今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">影響力操ってんのが今の俺</div>
+      <div class="line-omae">支えられてんのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">全体見て調整してるのが今の俺</div>
+      <div class="line-omae">今どうするかでオロオロしてるのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">仲間立ててんのが俺</div>
+      <div class="line-omae">相棒を下げたのが今回のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">いつも自分抑えながら見守ってんのが俺</div>
+      <div class="line-omae">気づいたら自分の事考えちゃってんのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">考えて決めるのが俺</div>
+      <div class="line-omae">とりあえずやるのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">仲間にはちゃんと相談するのが今の俺</div>
+      <div class="line-omae">1人で隠して抱え込むのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">甘えられる事も嬉しいと思えるのが今の俺</div>
+      <div class="line-omae">甘える事にもビビってんのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">お前の事考えて悩んでるのが俺</div>
+      <div class="line-omae">自分の事で悩んでるのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">身内に頼る事がまず悪いと思ってないのが俺</div>
+      <div class="line-omae">自分の事大きく見せようと焦ってるのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">そんでもいつも心配してやってるのが俺</div>
+      <div class="line-omae">吐いた言葉に責任取ろうと頭抱えてんのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">将来必ずでっかくなる男が俺</div>
+      <div class="line-omae">過去の自分に追われて息切れしてんのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">受けた恩は忘れないのが俺</div>
+      <div class="line-omae">受けた恩を当たり前にしちゃったのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">きっちり腹決めてんのが今の俺</div>
+      <div class="line-omae">現実逃避してんのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">全体を見て付き合いしてるのが俺</div>
+      <div class="line-omae">自分都合でその場付き合いしてるのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">わからない事を知る努力をしてるのが今の俺</div>
+      <div class="line-omae">わからないのに勝手に決めつけてるのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">自分は本物だと信じてるのが今の俺</div>
+      <div class="line-omae">自分が本物か疑ってるのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">自分がやってきた事は間違ってないと証明しようと踏ん張ってんのが今の俺</div>
+      <div class="line-omae">自分がやってきた事はなんだったって止まってんのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">自分の道を真っ直ぐ進もうとするのが俺</div>
+      <div class="line-omae">どこに進んでいいのかわからなくなったのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">それでも見離さずに教えてやるのが俺</div>
+      <div class="line-omae">俺にも自分にもイラついちゃうのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">自分も痛めても怒ってあげてるのが今の俺</div>
+      <div class="line-omae">自分だけ痛いのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">伝える努力をしてるのが今の俺</div>
+      <div class="line-omae">聞く努力すらしなかったのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">必要な努力をしてノートとPCで整理してるのが今の俺</div>
+      <div class="line-omae">ノートに考えを整理すらしなくなったのが今のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">いつも一緒に協力したいと思ってる俺</div>
+      <div class="line-omae">答えだけを言えって怒ってきたのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">まとめたものを共有したいから聞いてるのが俺</div>
+      <div class="line-omae">見てもくれなくなったのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">それでも歯食いしばって目こすってたのが俺</div>
+      <div class="line-omae">ハッキングされてるってキレたのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">ダメな事はダメって上にも言ったのが俺</div>
+      <div class="line-omae">大谷とランに言わなきゃいけない事すらふたをしたのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">わざわざ探したうえに時間と金払って1人でただ無意味に待ってたのが俺</div>
+      <div class="line-omae">お話する時間作ってくれませんかって持ちかけてきたのはごく最近のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">怒らないが失礼だから他の人間にはやるなって怒らず分かるように伝えたつもりだったのが俺</div>
+      <div class="line-omae">親しき仲にも礼儀ありですと自問自答してたはずの人間がつい最近のお前</div>
+    </div>
+    <div class="block">
+      <div class="line-omae">弁護士と話ししてて状況をちゃんと説明しなきゃいけないのが今のお前</div>
+      <div class="line-ore">誰にも言わずに麻布警察署にハト飛ばして確認してるのが今の俺</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">大橋いないって焦る氷室落ち着かせてホテル探して今後の話し含め連絡取り合ってるのが今の俺</div>
+      <div class="line-omae">バタバタして不安を感じてる残った下の子達にまず安心感与えないといけないのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">氷室とノブとランが連絡付かないって緩和剤しながら連絡とってるのが今の俺</div>
+      <div class="line-omae">ランに連絡させなきゃいけないのに連絡すらとれないのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">ランだの大谷ごとき都合悪い事は逃げるの知ってるから一ミリも驚く事がないのが俺</div>
+      <div class="line-omae">自分で決めた事に責任持ってランのケツ拭かないといけないのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">飯もタバコも吸えない環境で気張って先輩のけつふいてたのが今の俺</div>
+      <div class="line-omae">口切ったうえさらに連絡すらせずラクな相手とマッサージまで行ってやがったのがお前だよ</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">それでも中国人と1人ちゃんと戦ってなんとかしようとボロボロになったのが俺</div>
+      <div class="line-omae">その俺に去り際に俺のこと言ってんのかって最後の最後の出る時に脅してきたのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">自分で決めた事を人のせいにしないのが俺</div>
+      <div class="line-omae">大谷とランを繋げといて俺のせいにしたのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">相棒の顔にツバはいた奴殺す為にやってんのが俺</div>
+      <div class="line-omae">大谷にすら何も言えねーのが今のどうしようよねーお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">下げさせた頭軽くさせない為にその身内に100だけ渡してって頭下げたのが俺</div>
+      <div class="line-omae">口だけとか俺に吐き捨てて小銭で金投げ返してきたのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">相棒が軽く見られねーようにどこでも見してやってるのが俺</div>
+      <div class="line-omae">その下げさせたくないもん連発で下げてきやがったお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">今も1人なのが俺</div>
+      <div class="line-omae">まだ助けてもらってるのがお前</div>
+    </div>
+    <div class="block">
+      <div class="line-ore">裏で泣いてんのが俺</div>
+      <div class="line-omae">どこでもガキやってんのがお前</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="cut-line">
+      <div class="cut-ore">男が俺</div>
+      <div class="cut-omae">女がお前</div>
+    </div>
+  </section>
+
+  <section id="geki">
+    <div class="geki-line strong">こっから気合い見せれんのかよ</div>
+<div class="geki-line">嫌ならさっさと地元帰れよ</div>
+<div class="geki-line">男の横が簡単なわけねーだろ</div>
+<div class="geki-line strong">これからもだよ</div>
+  </section>
+
+  <section id="honne">
+    <div class="honne-divider"></div>
+    <div class="honne-line">そんでも悔しいけどお前に憧れてるし夢見てる</div>
+    <div class="honne-line">お前みたいに心からなりたいし惹かれる</div>
+    <div class="honne-line strong">生まれて初めて見た自分が霞む男だと思ってた</div>
+    <div class="honne-line">令和の勝新太郎みたいに生きれる器じゃねーかよ</div>
+    <div class="honne-line">リーマンみたいにただこなすなよ</div>
+    <div class="honne-line">自分の土俵があるだろーよ</div>
+    <div class="honne-line strong">全部巻き込んで最終的に俺らのもんにするんだろ？</div>
+    <div class="honne-line">今までと何がちげーんだよ</div>
+    <div class="honne-line">男やめちまったんなら男ぶってんじゃねーよ</div>
+    <div class="honne-line final">たけしはおれじゃねーっつーの</div>
+
+    <div class="honne-line small">馬鹿でも卑怯でもカスでもクズでも大切にするもんあるだろーよ</div>
+    <div class="honne-line small">そこだけは間違えるなよ</div>
+    <div class="honne-line small">頭わりーからとか学がねーとか関係無いとこだから</div>
+    <div class="honne-line small">人としてどーかだよ</div>
+    <div class="honne-line small">理屈なんていらねーよ</div>
+    <div class="honne-line small">言葉が見つからないに逃げてばっかだといろんなもん見失っちゃうぞ</div>
+    <div class="honne-line small">足元見直せよ</div>
+    <div class="honne-line small">大切なもんくらい見えねーのか？</div>
+
+    <div class="honne-line final" style="margin-top:64px; font-size:clamp(13px,2.1vw,16px); letter-spacing:0.1em; line-height:2.0;">人生で、これ以上自分を思って正面からもの言ってきてくれる他人を見つけれると思ってんだったら見つけてみろよ</div>
+  </section>
+
+  <section id="closing">
+    <div class="closing-gi">義</div>
+  </section>
+
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  var player;
+  var playerReady = false;
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('yt-player', {
+      height: '1', width: '1',
+      videoId: 'BF5t8ivVCHc',
+      playerVars: { controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1, rel: 0 },
+      events: {
+        onReady: function(e) {
+          playerReady = true;
+          e.target.setVolume(55);
+        }
+      }
+    });
+  }
+
+  function startStory() {
+    var cover = document.getElementById('cover');
+    cover.classList.add('fade-out');
+    var story = document.getElementById('story');
+    setTimeout(function() {
+      story.classList.add('visible');
+      window.scrollTo(0, 0);
+      startObserver();
+    }, 600);
+    if (playerReady) {
+      player.playVideo();
+    } else {
+      var waitPlay = setInterval(function() {
+        if (playerReady) { player.playVideo(); clearInterval(waitPlay); }
+      }, 300);
+    }
+    setTimeout(function() { cover.style.display = 'none'; }, 1500);
+  }
+
+  function startObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(
+      '.block, .divider, .cut-line, .geki-line, .honne-divider, .honne-line, #closing'
+    ).forEach(el => observer.observe(el));
+  }
+</script>
+</body>
+</html>
