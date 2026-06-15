@@ -47,6 +47,7 @@
     font-weight: 300;
   }
   #start-btn {
+    -webkit-tap-highlight-color: rgba(200,170,80,0.2);
     margin-top: 64px;
     background: transparent;
     border: none;
@@ -130,6 +131,17 @@
     font-family: 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
     font-weight: 900; font-size: clamp(80px, 18vw, 160px); color: #2a2418;
     filter: url(#kasure-filter); line-height: 1;
+  }
+
+  /* ===== スマホ最適化 ===== */
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    .block { font-size: clamp(16px, 4.5vw, 20px); line-height: 2.2; padding: 0 24px; }
+    .divider { width: 80%; }
+    #start-btn { font-size: 16px; margin-top: 48px; padding: 16px 8px; }
+    .cover-gi { width: 80vw !important; }
+    .cover-sub { font-size: 14px; }
+    #closing img { max-width: 85vw !important; }
   }
 </style>
 </head>
